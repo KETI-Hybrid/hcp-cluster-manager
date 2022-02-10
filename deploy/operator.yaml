@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hcp-cluster-manager
+  namespace: hcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: hcp-cluster-manager
+  template:
+    metadata:
+      labels:  
+        name: hcp-cluster-manager
+    spec:
+      serviceAccountName: hcp-cluster-manager
+      imagePullSecrets:
+      - name: regcred
+      containers:
+        - name: hcp-cluster-manager
+          image: ketidevit2/hcp-cluster-manager:v0.0.1
+          command:
+          - hcp-cluster-manager
+          imagePullPolicy: Always
+          env:
+          - name: WATCH_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: OPERATOR_NAME
+            value: "hcp-cluster-manager"
+          volumeMounts:
+          - name: kubeconfig
+            mountPath: /mnt
+      volumes:
+      - name: kubeconfig
+        PersistentVolumeClaim: 
+          claimName: pv-kubeconfig
+      

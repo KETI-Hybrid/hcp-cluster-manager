@@ -1,0 +1,15 @@
+apiVersion: v1alpha1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-kubeconfig
+  namespace: hcp
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    request:
+      storgae: 2Gi
+  storageClassName: cluster-manager
+  selector:
+    matchLabels:
+      app: kube-config

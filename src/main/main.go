@@ -1,7 +1,7 @@
 package main
 
 import (
-	controller "Hybrid_Cluster/hcp-cluster-manager/pkg/controller"
+	controller "Hybrid_Cluster/hcp-cluster-manager/src/controller"
 	hcpclusterv1alpha1 "Hybrid_Cluster/pkg/client/hcpcluster/v1alpha1/clientset/versioned"
 	informers "Hybrid_Cluster/pkg/client/hcpcluster/v1alpha1/informers/externalversions"
 	"Hybrid_Cluster/util/clusterManager"
@@ -27,7 +27,7 @@ func main() {
 	}
 	kubeInformerFactory := kubeinformers.NewSharedInformerFactory(cm.Host_kubeClient, time.Second*30)
 	hcpclusterInformerFactory := informers.NewSharedInformerFactory(hcpcluster_client, time.Second*30)
-// 
+	//
 	controller := controller.NewController(cm.Host_kubeClient, hcpcluster_client, hcpclusterInformerFactory.Hcp().V1alpha1().HCPClusters())
 	kubeInformerFactory.Start(stopCh)
 	hcpclusterInformerFactory.Start(stopCh)
