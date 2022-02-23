@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+apiVersion: v1
+=======
 apiVersion: v1alpha1
+>>>>>>> cef7bf61f6eda7a0ce90718c3536e415868e58d0
 kind: PersistentVolumeClaim
 metadata:
   name: pvc-kubeconfig
@@ -7,8 +11,13 @@ spec:
   accessModes:
   - ReadWriteMany
   resources:
+<<<<<<< HEAD
+    requests:
+      storage: 2Gi
+=======
     request:
       storgae: 2Gi
+>>>>>>> cef7bf61f6eda7a0ce90718c3536e415868e58d0
   storageClassName: cluster-manager
   selector:
     matchLabels:

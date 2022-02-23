@@ -222,6 +222,7 @@ func (c *Controller) syncHandler(key string) error {
 	joinstatus := hcpcluster.Spec.JoinStatus
 	platform := hcpcluster.Spec.ClusterPlatform
 	clustername := hcpcluster.Name
+
 	var master_config, _ = cobrautil.BuildConfigFromFlags("kube-master", "/root/.kube/config")
 	join_cluster_config, _ := cobrautil.BuildConfigFromFlags(clustername, "/root/.kube/config")
 	hcp_cluster, err := hcpclusterv1alpha1.NewForConfig(master_config)
@@ -233,7 +234,7 @@ func (c *Controller) syncHandler(key string) error {
 		if JoinCluster(platform, clustername, master_config, join_cluster_config, hcp_cluster) {
 
 			hcpcluster.Spec.JoinStatus = "JOIN"
-			_, err = hcp_cluster.HcpV1alpha1().HCPClusters(platform).Update(context.TODO(), hcpcluster, metav1.UpdateOptions{})
+			_, err = hcp_cluster.HcpV1alpha1().HCPClusters("hcp").Update(context.TODO(), hcpcluster, metav1.UpdateOptions{})
 			if err != nil {
 				klog.Info(err)
 				return err
@@ -254,7 +255,7 @@ func (c *Controller) syncHandler(key string) error {
 
 		if UnJoinCluster(clustername, master_config, join_cluster_config) {
 			hcpcluster.Spec.JoinStatus = "UNJOIN"
-			_, err = hcp_cluster.HcpV1alpha1().HCPClusters(platform).Update(context.TODO(), hcpcluster, metav1.UpdateOptions{})
+			_, err = hcp_cluster.HcpV1alpha1().HCPClusters("hcp").Update(context.TODO(), hcpcluster, metav1.UpdateOptions{})
 			if err != nil {
 				klog.Info(err)
 				return err
@@ -269,7 +270,7 @@ func (c *Controller) syncHandler(key string) error {
 		if UnJoinCluster(clustername, master_config, join_cluster_config) {
 			if JoinCluster(platform, clustername, master_config, join_cluster_config, hcp_cluster) {
 				hcpcluster.Spec.JoinStatus = "JOIN"
-				hcp_cluster.HcpV1alpha1().HCPClusters(platform).Update(context.TODO(), hcpcluster, metav1.UpdateOptions{})
+				hcp_cluster.HcpV1alpha1().HCPClusters("hcp").Update(context.TODO(), hcpcluster, metav1.UpdateOptions{})
 				klog.Infof("success to join %s", clustername)
 			} else {
 				klog.Infof("fail to join %s", clustername)
@@ -304,7 +305,7 @@ func (c *Controller) syncHandler(key string) error {
 							klog.Infof("%s is in a unstable state", clustername)
 							klog.Info("Type: ", kubefed_Type)
 							hcpcluster.Spec.JoinStatus = "UNREADY"
-							_, err = hcp_cluster.HcpV1alpha1().HCPClusters(platform).Update(context.TODO(), hcpcluster, metav1.UpdateOptions{})
+							_, err = hcp_cluster.HcpV1alpha1().HCPClusters("hcp").Update(context.TODO(), hcpcluster, metav1.UpdateOptions{})
 							if err != nil {
 								klog.Info(err)
 								return err
