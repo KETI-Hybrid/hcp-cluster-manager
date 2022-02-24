@@ -2,12 +2,12 @@ package controller
 
 import (
 	cobrautil "Hybrid_Cluster/hybridctl/util"
+	namespacefunc "Hybrid_Cluster/kube-resource/namespace"
 	hcpclusterv1alpha1 "Hybrid_Cluster/pkg/client/hcpcluster/v1alpha1/clientset/versioned"
 	informer "Hybrid_Cluster/pkg/client/hcpcluster/v1alpha1/informers/externalversions/hcpcluster/v1alpha1"
 	lister "Hybrid_Cluster/pkg/client/hcpcluster/v1alpha1/listers/hcpcluster/v1alpha1"
 	hcpclusterscheme "Hybrid_Cluster/pkg/client/sync/v1alpha1/clientset/versioned/scheme"
 	"Hybrid_Cluster/util/clusterManager"
-	cm "Hybrid_Cluster/util/clusterManager"
 	"context"
 	"fmt"
 	"log"
@@ -33,7 +33,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	fedv1b1 "sigs.k8s.io/kubefed/pkg/apis/core/v1beta1"
 	kubefed "sigs.k8s.io/kubefed/pkg/client/generic"
-	// "sigs.k8s.io/kubefed/pkg/kubefedctl/options"
 )
 
 const controllerAgentName = "hcp-cluster-manager"
@@ -313,17 +312,19 @@ func (c *Controller) syncHandler(key string) error {
 						}
 					}
 				}
-				// else {
-				// 	// JOIN - UNSTABLE -- JOIN / kubefedcluster에 존재하지 않는 경우
-				// 	klog.Infof("%s is in a unstable state", clustername)
-				// 	klog.Infof("Try to Join %s again", clustername)
-				// 	hcpcluster.Spec.JoinStatus = "UNREADY"
-				// 	_, err = hcp_cluster.HcpV1alpha1().HCPClusters(platform).Update(context.TODO(), hcpcluster, metav1.UpdateOptions{})
-				// 	if err != nil {
-				// 		klog.Info(err)
-				// 		return err
-				// 	}
-				// }
+				/*
+					else {
+						// JOIN - UNSTABLE -- JOIN / kubefedcluster에 존재하지 않는 경우
+						klog.Infof("%s is in a unstable state", clustername)
+						klog.Infof("Try to Join %s again", clustername)
+						hcpcluster.Spec.JoinStatus = "UNREADY"
+						_, err = hcp_cluster.HcpV1alpha1().HCPClusters(platform).Update(context.TODO(), hcpcluster, metav1.UpdateOptions{})
+						if err != nil {
+							klog.Info(err)
+							return err
+						}
+					}
+				*/
 			} else if joinstatus == "UNJOIN" {
 				// UNJOIN -- UNJOIN / kubefedcluster에 존재하는 경우
 				if clustername == cluster.Name {
@@ -338,20 +339,6 @@ func (c *Controller) syncHandler(key string) error {
 
 }
 
-func checkNamespaceExistence(config *rest.Config, ns string) (bool, error) {
-	client := kubernetes.NewForConfigOrDie(config)
-	nsList, err := client.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		klog.Info(err)
-		return false, err
-	}
-	for _, n := range nsList.Items {
-		if n.Name == ns {
-			return true, nil
-		}
-	}
-	return false, err
-}
 func JoinCluster(platform string,
 	clustername string,
 	master_config *rest.Config,
@@ -363,30 +350,12 @@ func JoinCluster(platform string,
 
 	ns := "kube-federation-system"
 	// 1. CREATE namespace "kube-federation-system"
-	exist, err := checkNamespaceExistence(join_cluster_config, ns)
-	if err != nil {
-		log.Println(err)
+	namespace, err_ns := namespacefunc.CheckAndCreateNamespace(clustername, ns)
+	if err_ns != nil {
+		log.Println(err_ns)
 		return false
-	}
-	if !exist {
-		Namespace := corev1.Namespace{
-			TypeMeta: metav1.TypeMeta{
-				Kind:       "Namespace",
-				APIVersion: "v1",
-			},
-			ObjectMeta: metav1.ObjectMeta{
-				Name: "kube-federation-system",
-			},
-		}
-
-		nampespace, err_ns := join_cluster_client.CoreV1().Namespaces().Create(context.TODO(), &Namespace, metav1.CreateOptions{})
-
-		if err_ns != nil {
-			log.Println(err_ns)
-			return false
-		} else {
-			klog.Info("< Step 1 > Create Namespace Resource [" + nampespace.Name + "] in " + clustername)
-		}
+	} else {
+		klog.Info("< Step 1 > Create Namespace Resource [" + namespace.Name + "] in " + clustername)
 	}
 
 	// 2. CREATE service account
@@ -510,7 +479,7 @@ func JoinCluster(platform string,
 		klog.Info("< Step 5-2 > Create Secret Resource [" + cluster_secret.Name + "] in " + "master")
 	}
 
-	cm := cm.NewClusterManager()
+	cm := clusterManager.NewClusterManager()
 	var disabledTLSValidations []fedv1b1.TLSValidation
 
 	if cm.Host_config.TLSClientConfig.Insecure {
@@ -536,7 +505,7 @@ func JoinCluster(platform string,
 	}
 
 	clientset := kubefed.NewForConfigOrDie(master_config)
-	err = clientset.Create(context.TODO(), kubefedcluster)
+	err := clientset.Create(context.TODO(), kubefedcluster)
 
 	if err != nil {
 		log.Println(err)
