@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 apiVersion: v1
-=======
-apiVersion: v1alpha1
->>>>>>> cef7bf61f6eda7a0ce90718c3536e415868e58d0
 kind: PersistentVolumeClaim
 metadata:
   name: pvc-kubeconfig
@@ -11,14 +7,90 @@ spec:
   accessModes:
   - ReadWriteMany
   resources:
-<<<<<<< HEAD
     requests:
       storage: 2Gi
-=======
-    request:
-      storgae: 2Gi
->>>>>>> cef7bf61f6eda7a0ce90718c3536e415868e58d0
   storageClassName: cluster-manager
   selector:
     matchLabels:
       app: kube-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-aws-config
+  namespace: hcp
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: cluster-manager
+  selector:
+    matchLabels:
+      app: aws-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-nks-config
+  namespace: hcp
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: cluster-manager
+  selector:
+    matchLabels:
+      app: nks-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: init
+  namespace: hcp
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: cluster-manager
+  selector:
+    matchLabels:
+      app: init
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-aks-config
+  namespace: hcp
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: cluster-manager
+  selector:
+    matchLabels:
+      app: aks-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-gke-config
+  namespace: hcp
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: cluster-manager
+  selector:
+    matchLabels:
+      app: gke-config
+---

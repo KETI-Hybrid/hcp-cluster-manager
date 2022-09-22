@@ -13,5 +13,95 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   nfs:
     path: /root/.kube
-    server: "10.0.5.86"
+    server: "10.0.5.83"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-aws-config
+  labels:
+    app: aws-config 
+spec:
+  capacity:
+    storage: 2Gi
+  storageClassName: cluster-manager
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /root/.aws
+    server: "10.0.5.83"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nks-config
+  labels:
+    app: nks-config 
+spec:
+  capacity:
+    storage: 2Gi
+  storageClassName: cluster-manager
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /root/.ncloud
+    server: "10.0.5.83"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: init
+  labels:
+    app: init
+spec:
+  capacity:
+    storage: 2Gi
+  storageClassName: cluster-manager
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /root/.vpa
+    server: "10.0.5.83"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-aks-config
+  labels:
+    app: aks-config 
+spec:
+  capacity:
+    storage: 2Gi
+  storageClassName: cluster-manager
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /root/.azure
+    server: "10.0.5.83"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-gke-config
+  labels:
+    app: gke-config 
+spec:
+  capacity:
+    storage: 2Gi
+  storageClassName: cluster-manager
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /root/.google
+    server: "10.0.5.83"
     readOnly: false

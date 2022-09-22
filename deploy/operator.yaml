@@ -18,7 +18,7 @@ spec:
       - name: regcred
       containers:
         - name: hcp-cluster-manager
-          image: ketidevit2/hcp-cluster-manager:v0.0.1
+          image: ketidevit2/hcp-cluster-manager:v0.0.3
           command:
           - hcp-cluster-manager
           imagePullPolicy: Always
@@ -35,11 +35,36 @@ spec:
             value: "hcp-cluster-manager"
           volumeMounts:
           - name: kubeconfig
-            mountPath: /mnt
+            mountPath: /root/.kube
+          - name: awsconfig 
+            mountPath: /root/.aws
+          - name: nksconfig 
+            mountPath: /root/.ncloud
+          - name: gkeconfig 
+            mountPath: /root/.google      
+          - name: init
+            mountPath: /root/.vpa
+          - name: aksconfig
+            mountPath: /root/.azure
       volumes:
       - name: kubeconfig
         persistentVolumeClaim: 
           claimName: pvc-kubeconfig
+      - name: awsconfig
+        persistentVolumeClaim:
+          claimName: pvc-aws-config
+      - name: nksconfig
+        persistentVolumeClaim:
+          claimName: pvc-nks-config
+      - name: gkeconfig
+        persistentVolumeClaim:
+          claimName: pvc-gke-config
+      - name: init
+        persistentVolumeClaim:
+          claimName: init
+      - name: aksconfig
+        persistentVolumeClaim:
+          claimName: pvc-aks-config
       tolerations:
         - key: node.kubernetes.io/not-ready
           effect: NoExecute
