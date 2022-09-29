@@ -1,21 +1,21 @@
 package controller
 
 import (
-	cobrautil "Hybrid_Cloud/hybridctl/util"
 	"context"
 	"fmt"
+	cobrautil "hybridctl/util"
 	"time"
 
-	namespacefunc "github.com/KETI-Hybrid/hcp-pkg/kube-resource/namespace"
+	namespacefunc "hcp-pkg/kube-resource/namespace"
 
-	"github.com/KETI-Hybrid/hcp-pkg/util"
-	"github.com/KETI-Hybrid/hcp-pkg/util/clientset"
-	"github.com/KETI-Hybrid/hcp-pkg/util/clusterManager"
+	"hcp-pkg/util"
+	"hcp-pkg/util/clientset"
+	"hcp-pkg/util/clusterManager"
 
-	hcpclusterv1alpha1 "github.com/KETI-Hybrid/hcp-pkg/client/hcpcluster/v1alpha1/clientset/versioned"
-	informer "github.com/KETI-Hybrid/hcp-pkg/client/hcpcluster/v1alpha1/informers/externalversions/hcpcluster/v1alpha1"
-	lister "github.com/KETI-Hybrid/hcp-pkg/client/hcpcluster/v1alpha1/listers/hcpcluster/v1alpha1"
-	hcpclusterscheme "github.com/KETI-Hybrid/hcp-pkg/client/sync/v1alpha1/clientset/versioned/scheme"
+	hcpclusterv1alpha1 "hcp-pkg/client/hcpcluster/v1alpha1/clientset/versioned"
+	informer "hcp-pkg/client/hcpcluster/v1alpha1/informers/externalversions/hcpcluster/v1alpha1"
+	lister "hcp-pkg/client/hcpcluster/v1alpha1/listers/hcpcluster/v1alpha1"
+	hcpclusterscheme "hcp-pkg/client/sync/v1alpha1/clientset/versioned/scheme"
 
 	rbacv1 "k8s.io/api/rbac/v1"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"

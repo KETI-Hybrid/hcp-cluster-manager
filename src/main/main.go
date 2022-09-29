@@ -4,9 +4,9 @@ import (
 	"flag"
 	"time"
 
-	controller "github.com/KETI-Hybrid/hcp-clustermanager-v1/src/controller"
-	informers "github.com/KETI-Hybrid/hcp-pkg/client/hcpcluster/v1alpha1/informers/externalversions"
-	"github.com/KETI-Hybrid/hcp-pkg/util/clusterManager"
+	controller "hcp-clustermanager/src/controller"
+	informers "hcp-pkg/client/hcpcluster/v1alpha1/informers/externalversions"
+	"hcp-pkg/util/clusterManager"
 
 	kubeinformers "k8s.io/client-go/informers"
 	"k8s.io/klog/v2"
