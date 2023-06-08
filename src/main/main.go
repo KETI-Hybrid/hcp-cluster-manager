@@ -9,7 +9,7 @@ import (
 	"hcp-pkg/util/clusterManager"
 
 	kubeinformers "k8s.io/client-go/informers"
-	"k8s.io/klog/v2"
+	"k8s.io/klog"
 	"k8s.io/sample-controller/pkg/signals"
 )
 
