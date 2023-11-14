@@ -30,7 +30,7 @@ func main() {
 	kubeInformerFactory.Start(stopCh)
 	hcpclusterInformerFactory.Start(stopCh)
 	if err := controller.Run(2, stopCh); err != nil {
-		klog.Fatalf("Error running controller: %s", err.Error())
+		klog.Fatalf("Error Running controller: %s", err.Error())
 	}
 
 }
