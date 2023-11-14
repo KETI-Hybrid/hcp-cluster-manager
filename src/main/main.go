@@ -32,5 +32,4 @@ func main() {
 	if err := controller.Run(2, stopCh); err != nil {
 		klog.Fatalf("Error running controller: %s", err.Error())
 	}
-
 }
