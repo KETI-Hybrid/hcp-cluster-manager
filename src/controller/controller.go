@@ -107,6 +107,7 @@ func (c *Controller) enquenehcpcluster(obj interface{}) {
 		return
 	}
 	c.workqueue.Add(key)
+	
 }
 
 // Run will set up the event handlers for types we are interested in, as well
@@ -145,6 +146,7 @@ func (c *Controller) Run(workers int, stopCh <-chan struct{}) error {
 // processNextWorkItem function in order to read and process a message on the
 // workqueue.
 func (c *Controller) runWorker() {
+	
 	for c.processNextWorkItem() {
 	}
 }
